@@ -198,6 +198,38 @@ input[type=range]:focus-visible{outline:2px solid var(--focus); outline-offset:4
   .instrument{padding:var(--s3)}
 }
 
+/* ---------- "the science" explainer ---------- */
+.science{border-top:1px solid var(--rule); margin:0 var(--s1); padding-top:var(--s2)}
+.science > summary{
+  list-style:none; cursor:pointer; font-family:var(--font-body); font-size:var(--fs-body);
+  color:var(--ink-muted); display:flex; align-items:center; gap:8px; user-select:none;
+  transition:color .2s ease;
+}
+.science > summary::-webkit-details-marker{display:none}
+.science > summary::before{
+  content:"▸"; font-family:var(--font-mono); color:var(--signal); font-size:.9em;
+  transition:transform .2s ease; display:inline-block;
+}
+.science[open] > summary::before{transform:rotate(90deg)}
+.science > summary:hover{color:var(--ink)}
+.science > summary .sci-open{font-family:var(--font-display); font-weight:600; color:var(--ink)}
+.science > summary:focus-visible{outline:2px solid var(--focus); outline-offset:3px; border-radius:4px}
+.science-body{padding-top:var(--s2); max-width:66ch; animation:sciReveal .3s cubic-bezier(.4,0,.2,1)}
+@keyframes sciReveal{from{opacity:0; transform:translateY(-4px)} to{opacity:1; transform:none}}
+.science-body p{font-size:var(--fs-body); line-height:1.6; color:var(--ink-muted); margin-bottom:var(--s2)}
+.science-body p strong{color:var(--ink); font-weight:600}
+.science-body em{font-style:italic; color:var(--ink)}
+.findings{list-style:none; display:flex; flex-direction:column; gap:10px; margin:0 0 var(--s2)}
+.findings li{
+  display:flex; align-items:baseline; gap:10px; font-size:var(--fs-body); line-height:1.5;
+  color:var(--ink-muted); padding-left:2px;
+}
+.findings li strong{color:var(--ink); font-weight:600}
+.f-text{flex:1}
+.f-dot{flex:none; width:9px; height:9px; border-radius:50%; align-self:flex-start; margin-top:.5em}
+.sci-why{border-left:2px solid var(--rule); padding-left:var(--s2)}
+.sci-cite{font-family:var(--font-mono); font-size:var(--fs-caption); color:var(--ink-muted); margin-bottom:0 !important}
+
 /* ---------- concept intro ---------- */
 .is-hidden{display:none !important}
 
@@ -409,6 +441,41 @@ body.project .mysteryBox{width:104px; height:104px}
     </div>
     <div id="callbackSlot"></div>
     <p class="caption" id="caption" aria-live="polite"></p>
+
+    <details class="science">
+      <summary><span class="sci-open">The science</span> — Schultz's hypothesis &amp; findings</summary>
+      <div class="science-body">
+        <p><strong>The hypothesis.</strong> Midbrain dopamine neurons were long assumed to signal
+        <em>reward</em>. Wolfram Schultz's single-neuron recordings — formalised with Dayan &amp;
+        Montague (<em>Science</em>, 1997) — reframed that: they encode the <strong>reward-prediction
+        error</strong>, δ = (reward received − reward predicted). This is the same error term that
+        drives <strong>temporal-difference reinforcement learning</strong>, so the biology and the
+        computational theory turned out to be one and the same.</p>
+
+        <ol class="findings">
+          <li><span class="f-dot" style="background:var(--signal)"></span>
+            <span class="f-text"><strong>Unpredicted reward →</strong> a phasic
+            <span style="color:var(--signal)">burst</span> (positive δ). A surprise reward excites the
+            neuron.</span></li>
+          <li><span class="f-dot" style="background:var(--cue)"></span>
+            <span class="f-text"><strong>Predicted reward →</strong> once a <span class="cueword">cue</span>
+            reliably precedes reward, the burst <strong>transfers backward in time to the cue</strong>;
+            at reward time the response vanishes (δ ≈ 0).</span></li>
+          <li><span class="f-dot" style="background:var(--loss)"></span>
+            <span class="f-text"><strong>Omitted reward →</strong> withholding a predicted reward makes
+            firing <span class="lossword">dip below baseline</span> at the expected time
+            (negative δ).</span></li>
+        </ol>
+
+        <p class="sci-why"><strong>Why it matters.</strong> Dopamine is a <em>teaching signal</em>,
+        not a "pleasure" signal. It explains how neutral cues acquire motivational pull, grounds
+        computational models of learning, and is central to reinforcement, motivation, and addiction
+        (drugs that spike dopamine produce a prediction error that never fully extinguishes).</p>
+
+        <p class="sci-cite">Schultz, W., Dayan, P. &amp; Montague, P. R. (1997). A neural substrate of
+        prediction and reward. <em>Science</em>, 275(5306), 1593–1599.</p>
+      </div>
+    </details>
   </section>
 
   <aside class="rail">
