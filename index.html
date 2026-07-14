@@ -263,6 +263,24 @@ input[type=range]:focus-visible{outline:2px solid var(--focus); outline-offset:4
 .introNav .btn{flex:none; min-width:200px}
 body.project .introNav .btn{min-width:260px}
 
+/* screen 0 — welcome & instructions */
+.how{border-top:1px solid var(--rule); padding-top:var(--s3)}
+.how-title{
+  font-family:var(--font-mono); font-size:var(--fs-caption); letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-muted); margin-bottom:var(--s2);
+}
+.how-list{list-style:none; display:flex; flex-direction:column; gap:14px}
+.how-list li{
+  display:grid; grid-template-columns:210px 1fr; gap:var(--s2); align-items:baseline;
+  font-size:var(--fs-body); line-height:1.5; color:var(--ink-muted);
+}
+.how-list li{padding-bottom:14px; border-bottom:1px solid var(--rule-soft)}
+.how-list li:last-child{border-bottom:none; padding-bottom:0}
+.how-list .k{font-family:var(--font-mono); font-size:.85rem; color:var(--ink); font-weight:500}
+.s0-note{font-size:var(--fs-caption); color:var(--ink-muted); line-height:1.5}
+.s0-note strong{color:var(--ink)}
+@media(max-width:640px){ .how-list li{grid-template-columns:1fr; gap:3px} }
+
 /* screen 1 stage */
 .s1-stage{
   position:relative; align-self:center; width:100%; max-width:560px; height:280px;
@@ -388,6 +406,34 @@ body.project .mysteryBox{width:104px; height:104px}
 </header>
 
 <div id="intro" class="is-hidden">
+  <!-- Screen 0 — welcome & instructions -->
+  <section class="introScreen intro-welcome" id="s0" hidden>
+    <span class="eyebrow">Introduction</span>
+    <h2>Watch the dopamine signal move.</h2>
+    <p class="lead">Dopamine neurons don't report reward — they report <em>surprise</em>: the gap
+      between the reward you get and the reward you predicted. As a cue learns to predict the reward,
+      that signal migrates from the reward to the cue. This instrument lets you run the classic
+      experiment and watch it happen.</p>
+
+    <div class="how">
+      <div class="how-title">How to use it</div>
+      <ul class="how-list">
+        <li><span class="k">Run 1 trial</span><span>Deliver one cue → reward pairing; the δ spikes update.</span></li>
+        <li><span class="k">Auto-run</span><span>Play trials continuously and watch the spike migrate from reward to cue.</span></li>
+        <li><span class="k">Learning · Learned · Omission</span><span>Jump to each of the three canonical states.</span></li>
+        <li><span class="k">α &nbsp;(learning rate)</span><span>How fast prediction catches up to the reward.</span></li>
+        <li><span class="k">Reproduce Schultz's figure</span><span>A guided tour that pauses on each finding with narration.</span></li>
+        <li><span class="k">● Solo &nbsp;/&nbsp; ▣ Project</span><span>Single-screen study vs. dark projection mode for a class.</span></li>
+      </ul>
+    </div>
+
+    <div class="introNav">
+      <button class="btn btn--full" id="beginIntro">Begin →</button>
+    </div>
+    <p class="s0-note">Two quick concept screens come first — or use <strong>Skip intro →</strong>
+      (top right) to go straight to the instrument.</p>
+  </section>
+
   <!-- Screen 1 -->
   <section class="introScreen" id="s1" hidden>
     <span class="eyebrow">Concept · 1 of 2</span>
@@ -1171,8 +1217,10 @@ window.addEventListener('resize', ()=>{
  * ============================================================= */
 const introEl = {
   wrap: document.getElementById('intro'),
+  s0: document.getElementById('s0'),
   s1: document.getElementById('s1'),
   s2: document.getElementById('s2'),
+  begin: document.getElementById('beginIntro'),
   stage: document.getElementById('s1stage'),
   box: document.getElementById('mysteryBox'),
   cueLight: document.getElementById('cueLight'),
@@ -1268,16 +1316,22 @@ function onBoxOpen(){
 }
 
 function showScreen(which){
+  introEl.s0.hidden = which !== 0;
   introEl.s1.hidden = which !== 1;
   introEl.s2.hidden = which !== 2;
-  const scr = which === 1 ? introEl.s1 : introEl.s2;
+  const scr = which === 0 ? introEl.s0 : which === 1 ? introEl.s1 : introEl.s2;
   scr.classList.remove('enter'); void scr.offsetWidth; scr.classList.add('enter');
+  introEl.wrap.scrollTop = 0;
 }
 
 function startIntro(){
   introEl.wrap.classList.remove('is-hidden');
   introEl.skip.classList.remove('is-hidden');
   introEl.main.classList.add('is-hidden');
+  showScreen(0);
+}
+
+function enterScreen1(){
   s1 = { rep:0, p:0, ready:false };
   introEl.peVal.textContent = '—'; introEl.peVal.dataset.lvl = 'high';
   introEl.s1trials.textContent = '0';
@@ -1318,6 +1372,7 @@ function maybeCallback(){
 }
 
 /* intro events */
+introEl.begin.addEventListener('click', enterScreen1);
 introEl.box.addEventListener('click', onBoxOpen);
 introEl.s1continue.addEventListener('click', ()=>showScreen(2));
 introEl.predictBtns.forEach(b=>{
