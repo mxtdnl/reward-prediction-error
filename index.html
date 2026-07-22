@@ -232,6 +232,7 @@ input[type=range]:focus-visible{outline:2px solid var(--focus); outline-offset:4
 
 /* ---------- concept intro ---------- */
 .is-hidden{display:none !important}
+[hidden]{display:none !important}
 
 .skip{
   font:500 .8rem/1 var(--font-body); padding:9px 14px; background:transparent;
@@ -381,12 +382,111 @@ body.project .mysteryBox{width:104px; height:104px}
   .s1-stage{height:240px; gap:clamp(32px,10vw,80px)}
 }
 
+/* ============================================================= *
+ *  Signal & Noise — business decision game
+ * ============================================================= */
+.viewnav{display:inline-flex; border:1px solid var(--rule); border-radius:6px; overflow:hidden}
+.viewnav button{
+  font:500 .8rem/1 var(--font-body); padding:9px 14px; background:transparent;
+  color:var(--ink-muted); border:none; border-right:1px solid var(--rule); cursor:pointer;
+  letter-spacing:.02em; transition:background .2s ease, color .2s ease; white-space:nowrap;
+}
+.viewnav button:last-child{border-right:none}
+.viewnav button.on{background:var(--ink); color:var(--paper)}
+.viewnav button:focus-visible{outline:2px solid var(--focus); outline-offset:-2px; position:relative; z-index:1}
+
+.game{
+  display:grid; grid-template-columns:1fr 360px; gap:var(--s4);
+  padding:var(--s4) var(--s5); max-width:1440px; margin:0 auto; align-items:start;
+}
+
+.hero-sub{font-size:var(--fs-h3); color:var(--ink-muted)}
+
+/* channel board */
+.board{display:grid; grid-template-columns:1fr 1fr; gap:var(--s2)}
+.chan{
+  position:relative; text-align:left; background:var(--surface); border:1px solid var(--rule);
+  border-radius:8px; padding:var(--s2) var(--s2) calc(var(--s2) + 2px); cursor:pointer;
+  display:flex; flex-direction:column; gap:9px; color:var(--ink); font-family:var(--font-body);
+  transition:border-color .18s ease, box-shadow .25s ease, transform .12s ease; overflow:hidden;
+  box-shadow:0 1px 2px rgba(22,19,15,.04);
+}
+body.project .chan{box-shadow:none}
+.chan:hover:not(:disabled){border-color:var(--ink); transform:translateY(-1px)}
+.chan:active:not(:disabled){transform:translateY(0)}
+.chan:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+.chan:disabled{cursor:default; opacity:.9}
+.chan.sel{border-color:var(--signal); box-shadow:0 0 0 3px color-mix(in srgb, var(--signal) 22%, transparent)}
+.chan.anticipate .meter.est i{box-shadow:0 0 12px 1px color-mix(in srgb, var(--cue) 65%, transparent)}
+.chan.anticipate{border-color:var(--cue)}
+
+.chan-head{display:flex; justify-content:space-between; align-items:baseline; gap:8px}
+.chan-name{font-family:var(--font-display); font-weight:600; font-size:1.15rem; letter-spacing:-.01em}
+.chan-tries{font-family:var(--font-mono); font-size:var(--fs-caption); color:var(--ink-muted); white-space:nowrap}
+.chan-sub{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted); margin-top:-4px}
+.chan-row{display:flex; justify-content:space-between; align-items:baseline; font-size:var(--fs-caption); color:var(--ink-muted); margin-top:2px}
+.chan-row b{font-family:var(--font-mono); color:var(--cue); font-size:.95rem; font-weight:500; font-variant-numeric:tabular-nums}
+.meter{height:6px; background:var(--rule-soft); border-radius:3px; overflow:hidden}
+.meter i{display:block; height:100%; border-radius:3px}
+.meter.est i{background:var(--cue); width:0; transition:width .5s cubic-bezier(.4,0,.2,1)}
+.meter.pitch i{background:var(--amber)}
+
+/* reveal strip */
+.reveal{
+  display:flex; align-items:stretch; gap:var(--s2); padding:14px var(--s3);
+  border:1px solid var(--rule); border-radius:8px; background:var(--surface);
+}
+.reveal .col{display:flex; flex-direction:column; gap:3px; justify-content:center; flex:1; min-width:0}
+.reveal .rc-delta{flex:1.4; border-left:1px solid var(--rule); padding-left:var(--s3)}
+.reveal .rk{font-family:var(--font-mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted)}
+.reveal .rv{font-family:var(--font-mono); font-weight:500; font-size:var(--fs-h2); line-height:1; color:var(--ink); font-variant-numeric:tabular-nums}
+.reveal .rchan{font-family:var(--font-display); font-size:var(--fs-h3); font-weight:600}
+.reveal .rv.delta{font-size:var(--fs-h1)}
+.reveal .rv.delta[data-sign="pos"]{color:var(--signal)}
+.reveal .rv.delta[data-sign="neg"]{color:var(--loss)}
+.reveal .rv.delta[data-sign="zero"]{color:var(--ink-muted)}
+
+.gbanner{border-color:var(--amber); background:color-mix(in srgb, var(--amber) 12%, transparent)}
+.gbanner b{color:var(--amber)}
+
+.muted2{color:var(--ink-muted)}
+.caption .muted2 b{color:var(--ink-muted)}
+
+/* scorecard */
+.scorecard{
+  border:1px solid var(--rule); border-radius:8px; padding:var(--s3);
+  display:flex; flex-direction:column; gap:10px; animation:sciReveal .3s cubic-bezier(.4,0,.2,1);
+}
+.score-row{display:flex; justify-content:space-between; align-items:baseline; gap:var(--s2);
+  font-size:var(--fs-body); color:var(--ink); padding-bottom:8px; border-bottom:1px solid var(--rule-soft)}
+.score-row:last-of-type{border-bottom:none}
+.score-row b{font-family:var(--font-mono); font-weight:500; font-size:var(--fs-h3); color:var(--ink); font-variant-numeric:tabular-nums}
+.score-row.muted2{color:var(--ink-muted)}
+.score-row.muted2 b{color:var(--ink-muted)}
+.score-row.you b{color:var(--signal)}
+.score-note{font-size:var(--fs-caption); color:var(--ink-muted); line-height:1.5; margin-top:2px}
+.score-note em{color:var(--ink); font-style:italic}
+
+.rail-chart-lbl span{color:var(--signal)}
+
+@media (max-width:820px){
+  .game{grid-template-columns:1fr; padding:var(--s3)}
+  .game .rail{order:2} .game .viz{order:1}
+  .viewnav button{padding:8px 10px; font-size:.72rem}
+  .reveal{flex-wrap:wrap}
+  .reveal .rc-delta{border-left:none; padding-left:0}
+}
+@media (max-width:520px){
+  .board{grid-template-columns:1fr}
+}
+
 @media (prefers-reduced-motion:reduce){
   *{transition-duration:.001ms !important}
   .introScreen.enter, .callback{animation:none}
   .mysteryBox.open .coin{animation:none; transform:scale(1); opacity:1}
   .burst.go .ray{animation:none}
   .cueLight.flash .dot{box-shadow:none}
+  .scorecard{animation:none}
 }
 </style>
 </head>
@@ -398,6 +498,10 @@ body.project .mysteryBox{width:104px; height:104px}
   </div>
   <div class="header-right">
     <button class="skip is-hidden" id="skipIntro">Skip intro →</button>
+    <div class="viewnav is-hidden" id="viewNav" role="group" aria-label="View">
+      <button data-view="viz" class="on" aria-pressed="true">◐ Visualiser</button>
+      <button data-view="game" aria-pressed="false">◆ Signal &amp; Noise</button>
+    </div>
     <div class="modetoggle" role="group" aria-label="Delivery mode">
       <button data-mode="solo" id="mSolo">● Solo</button>
       <button data-mode="project" id="mProj">▣ Project</button>
@@ -567,6 +671,82 @@ body.project .mysteryBox{width:104px; height:104px}
         δ = actual − predicted. The dopamine signal <em>migrates</em> from reward to cue as the
         cue becomes predictive.<br>Schultz, Dayan &amp; Montague (1997), <em>Science</em>.
       </p>
+
+      <button class="btn btn--signal btn--full" id="toGame">▶ Apply it — play “Signal &amp; Noise”</button>
+      <p class="rail-note">Take the same prediction-error signal into a business decision: back a
+        channel each quarter and watch your estimates learn.</p>
+    </div>
+  </aside>
+</main>
+
+<!-- ============ Signal & Noise — business decision game ============ -->
+<main class="game is-hidden">
+  <section class="viz">
+    <div id="gBanner" class="callback gbanner" hidden></div>
+
+    <div class="board" id="gBoard"></div>
+
+    <div class="reveal" id="gReveal">
+      <div class="col rc-chan"><span class="rk">Backed</span><span class="rv rchan" id="gRevChan">—</span></div>
+      <div class="col"><span class="rk">Return</span><span class="rv" id="gRevReturn">—</span></div>
+      <div class="col rc-delta"><span class="rk">Prediction error&nbsp;δ</span><span class="rv delta" id="gRevDelta" data-sign="zero">—</span></div>
+    </div>
+
+    <p class="caption" id="gCaption"></p>
+
+    <div class="scorecard" id="gScore" hidden></div>
+
+    <details class="science">
+      <summary><span class="sci-open">The idea</span> — why this is the same signal</summary>
+      <div class="science-body">
+        <p>Each quarter you hold an estimate <em>V</em> of a channel's value. The return you get is
+        compared with that expectation, and the gap — <strong>δ = return − V</strong> — is the
+        <strong>reward-prediction error</strong>. Your estimate moves by <em>V ← V + α·δ</em>, exactly
+        the update the dopamine signal implements in the brain.</p>
+        <p>The pay-off you <em>feel</em> (the return) and the thing that <em>teaches</em> you (δ) are
+        different quantities. A well-learned channel keeps paying out while its δ — and the dopamine
+        burst — falls silent; a channel that suddenly disappoints fires a negative error that pulls your
+        estimate back down. That dissociation is the whole point: <strong>dopamine is a teaching
+        signal, not a pleasure meter.</strong> The flashy <em>pitch</em> on each card is a cue — and,
+        as in life, it doesn't reliably track true value. Only the prediction error does.</p>
+      </div>
+    </details>
+  </section>
+
+  <aside class="rail">
+    <div class="counter">
+      <span class="lbl">Quarter</span>
+      <span class="hero"><span id="gRound">0</span><span class="hero-sub">/16</span></span>
+    </div>
+
+    <div class="counter">
+      <span class="lbl">Returns banked</span>
+      <span class="hero" id="gBanked">0</span>
+    </div>
+
+    <div class="rail-chart">
+      <div class="rail-chart-lbl">Prediction error δ per quarter <span id="gDeltaNow">—</span></div>
+      <div class="canvas-wrap small">
+        <canvas id="gSpark" role="img" aria-label="Bar trace of the reward-prediction error for each quarter played. Bars point up for positive errors, down for negative."></canvas>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="slider">
+        <label for="gAlpha">Learning rate&nbsp;α <span class="mono" id="gAlphaVal">0.35</span></label>
+        <input type="range" id="gAlpha" min="0.05" max="0.7" step="0.01" value="0.35" aria-describedby="gAlphaDesc">
+        <div class="descriptor" id="gAlphaDesc"><span>stubborn&nbsp;·&nbsp;0.05</span><span>0.70&nbsp;·&nbsp;jumpy</span></div>
+      </div>
+
+      <button class="btn btn--ghost btn--full" id="gAuto" aria-pressed="false">▶ Auto-pilot (exploit best)</button>
+      <button class="btn btn--ghost btn--full" id="gReset">Reset game</button>
+
+      <p class="rail-note">
+        δ = return − your estimate. Estimates learn by <em>V ← V + α·δ</em>. Watch a well-learned
+        channel keep paying while its δ — and the dopamine — fades to zero.
+      </p>
+
+      <button class="btn btn--ghost btn--full" id="backToViz">← Back to the visualiser</button>
     </div>
   </aside>
 </main>
@@ -1166,7 +1346,7 @@ function setMode(mode){
   try{ localStorage.setItem('rpe-mode', mode); }catch(e){}
   refreshColours();
   // re-measure after layout settles (font-size change alters canvas box)
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{ drawScope(0,0); drawCurve(); }));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ drawScope(0,0); drawCurve(); if(g.started) gDrawSpark(); }));
 }
 
 /* ============================================================= *
@@ -1209,7 +1389,7 @@ window.addEventListener('keydown', e=>{
 let rzT;
 window.addEventListener('resize', ()=>{
   clearTimeout(rzT);
-  rzT = setTimeout(()=>{ drawScope(0,0); drawCurve(); }, 120);
+  rzT = setTimeout(()=>{ drawScope(0,0); drawCurve(); if(g.started) gDrawSpark(); }, 120);
 });
 
 /* ============================================================= *
@@ -1328,6 +1508,8 @@ function startIntro(){
   introEl.wrap.classList.remove('is-hidden');
   introEl.skip.classList.remove('is-hidden');
   introEl.main.classList.add('is-hidden');
+  gmain.classList.add('is-hidden');
+  document.getElementById('viewNav').classList.add('is-hidden');
   showScreen(0);
 }
 
@@ -1345,7 +1527,10 @@ function enterScreen1(){
 function showInstrument(){
   introEl.wrap.classList.add('is-hidden');
   introEl.skip.classList.add('is-hidden');
+  gmain.classList.add('is-hidden');
   introEl.main.classList.remove('is-hidden');
+  document.getElementById('viewNav').classList.remove('is-hidden');
+  setNavActive('viz');
   if(!instrumentShown){ instrumentShown = true; syncReadouts(); setCaption(captionFor()); }
   requestAnimationFrame(()=>requestAnimationFrame(()=>{ drawScope(0,0); drawCurve(); }));
 }
@@ -1391,6 +1576,284 @@ introEl.runExp.addEventListener('click', ()=>{
   showInstrument();
 });
 introEl.skip.addEventListener('click', ()=>{ persistSeen(); showInstrument(); });
+
+/* ============================================================= *
+ *  Signal & Noise — business decision game
+ * ============================================================= */
+const gmain = document.querySelector('main.game');
+const gEl = {
+  board:     document.getElementById('gBoard'),
+  round:     document.getElementById('gRound'),
+  banked:    document.getElementById('gBanked'),
+  revChan:   document.getElementById('gRevChan'),
+  revReturn: document.getElementById('gRevReturn'),
+  revDelta:  document.getElementById('gRevDelta'),
+  caption:   document.getElementById('gCaption'),
+  spark:     document.getElementById('gSpark'),
+  deltaNow:  document.getElementById('gDeltaNow'),
+  alpha:     document.getElementById('gAlpha'),
+  alphaVal:  document.getElementById('gAlphaVal'),
+  auto:      document.getElementById('gAuto'),
+  reset:     document.getElementById('gReset'),
+  score:     document.getElementById('gScore'),
+  banner:    document.getElementById('gBanner'),
+  back:      document.getElementById('backToViz'),
+};
+const gsctx = gEl.spark.getContext('2d');
+
+// channels: mu is [before-shift, after-shift] true mean return; pitch is the (unreliable) cue
+const CH = [
+  { name:'Referral',    note:'word-of-mouth',       pitch:0.50, mu:[74,42], sigma:8  },
+  { name:'Paid Search', note:'always-on',           pitch:0.55, mu:[62,71], sigma:10 },
+  { name:'Influencer',  note:'big pitch, big swing', pitch:0.92, mu:[45,45], sigma:26 },
+  { name:'Trade Shows', note:'expensive',           pitch:0.70, mu:[38,36], sigma:14 },
+];
+const G_ROUNDS = 16, G_SHIFT = 10, G_PRIOR = 50;
+
+const g = {
+  alpha:0.35, round:0, banked:0, regime:0,
+  V: CH.map(()=>G_PRIOR),
+  tries: CH.map(()=>0),
+  hist: [],
+  busy:false, auto:false, done:false, started:false,
+  cards:[],
+};
+
+const gMu = i => CH[i].mu[g.regime];
+function gGauss(mean, sd){
+  let u=0, v=0; while(u===0) u=Math.random(); while(v===0) v=Math.random();
+  return mean + Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)*sd;
+}
+
+function gBuildBoard(){
+  gEl.board.innerHTML = '';
+  g.cards = [];
+  CH.forEach((c,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'chan'; btn.type = 'button'; btn.dataset.i = i;
+    btn.innerHTML =
+      `<div class="chan-head"><span class="chan-name">${c.name}</span><span class="chan-tries" data-tries>—</span></div>`+
+      `<div class="chan-sub">${c.note}</div>`+
+      `<div class="chan-row"><span>your estimate&nbsp;V</span><b data-est>—</b></div>`+
+      `<div class="meter est"><i data-estbar></i></div>`+
+      `<div class="chan-row"><span>pitch</span><span class="chan-tries">${Math.round(c.pitch*100)}%</span></div>`+
+      `<div class="meter pitch"><i style="width:${Math.round(c.pitch*100)}%"></i></div>`;
+    btn.addEventListener('click', ()=>gPick(i));
+    gEl.board.appendChild(btn);
+    g.cards.push(btn);
+  });
+}
+
+function gRenderCards(){
+  g.cards.forEach((btn,i)=>{
+    btn.querySelector('[data-tries]').textContent = g.tries[i] ? g.tries[i]+'×' : '—';
+    btn.querySelector('[data-est]').textContent = Math.round(g.V[i]);
+    btn.querySelector('[data-estbar]').style.width = clamp(g.V[i],0,100)+'%';
+  });
+}
+
+function gBurst(cardEl, mag, colour){
+  if(reducedMotion || mag < 0.05) return;
+  const b = document.createElement('div');
+  b.className = 'burst'; b.style.left = '50%'; b.style.top = '46%'; b.style.color = colour;
+  const rays = 10, len = 12 + Math.min(mag,1)*40;
+  for(let k=0;k<rays;k++){
+    const r = document.createElement('span'); r.className = 'ray';
+    r.style.setProperty('--a', (k*36)+'deg'); r.style.setProperty('--len', len+'px');
+    b.appendChild(r);
+  }
+  cardEl.appendChild(b);
+  requestAnimationFrame(()=>b.classList.add('go'));
+  setTimeout(()=>b.remove(), 640);
+}
+
+function gPick(i){
+  if(g.busy || g.done) return;
+  g.busy = true;
+  const card = g.cards[i];
+  g.cards.forEach(c=>c.classList.remove('sel','anticipate'));
+  card.classList.add('sel','anticipate');
+  const V = g.V[i];
+  gEl.revChan.textContent = CH[i].name;
+  gEl.caption.innerHTML =
+    `Backing <b>${CH[i].name}</b>. Before the result lands, your brain fires the value it has `+
+    `<em>learned to expect</em> — V = <b>${Math.round(V)}</b>. `+
+    `<span class="muted2">That anticipation <b>is</b> the dopamine cue response — not a reward.</span>`;
+  setTimeout(()=>gReveal(i, V), reducedMotion ? 0 : 650);
+}
+
+function gReveal(i, V){
+  const card = g.cards[i];
+  card.classList.remove('anticipate');
+  const R = Math.round(clamp(gGauss(gMu(i), CH[i].sigma), 0, 100));
+  const delta = R - V;
+
+  g.V[i] = clamp(V + g.alpha*delta, 0, 100);
+  g.tries[i]++; g.round++; g.banked += R; g.hist.push(delta);
+
+  gEl.revReturn.textContent = R;
+  gEl.revDelta.textContent = (delta>=0?'+':'') + Math.round(delta);
+  gEl.revDelta.dataset.sign = delta > 3 ? 'pos' : delta < -3 ? 'neg' : 'zero';
+  gEl.round.textContent = g.round;
+  gEl.banked.textContent = g.banked;
+  gEl.deltaNow.textContent = (delta>=0?'+':'') + Math.round(delta);
+  gBurst(card, Math.min(Math.abs(delta)/40, 1), delta>=0 ? css('--signal') : css('--loss'));
+  gRenderCards();
+  gDrawSpark();
+  gEl.caption.innerHTML = gCaptionFor(i, R, delta);
+
+  setTimeout(()=>{
+    card.classList.remove('sel');
+    g.busy = false;
+    if(g.round === G_SHIFT) gRegimeShift();
+    if(g.round >= G_ROUNDS) gFinish();
+    else if(g.auto && !g.done) gAutoStep();
+  }, reducedMotion ? 0 : 520);
+}
+
+function gCaptionFor(i, R, delta){
+  const name = CH[i].name, tries = g.tries[i], ad = Math.abs(delta);
+  const d = (delta>=0?'+':'') + Math.round(delta);
+  if(g.round <= 1)
+    return `First result in: <b>${R}</b>, against an expectation of ${Math.round(R-delta)} — a `+
+      `<b>prediction error of ${d}</b>. Everything is a surprise at first, so the learning signal is loud.`;
+  if(g.regime === 1 && ad > 14)
+    return `<span class="lossword">The market moved.</span> ${name} returned <b>${R}</b> versus your now-stale `+
+      `estimate — a jolt of <b>${d}</b>. The dopamine is loud again because your model is wrong again.`;
+  if(delta < -14 && tries >= 3)
+    return `<span class="lossword">Betrayal.</span> A channel you'd come to trust under-delivered (${R}), firing a `+
+      `<b>negative error of ${Math.round(delta)}</b> — a dip below baseline. This is how you <em>un-learn</em> misplaced confidence.`;
+  if(ad < 6 && tries >= 3)
+    return `${name} paid <b>${R}</b> again — reliable. But δ ≈ <b>0</b>: no surprise, no learning. `+
+      `<span class="muted2">You're <b>still being rewarded</b>, yet the dopamine signal has gone quiet. Reward ≠ teaching signal.</span>`;
+  if(delta >= 0)
+    return `${name} beat your estimate (${d}). The positive error nudges your estimate <em>up</em> to ${Math.round(g.V[i])}.`;
+  return `${name} came in under your estimate (${d}). The negative error nudges your estimate <em>down</em> to ${Math.round(g.V[i])}.`;
+}
+
+function gRegimeShift(){
+  g.regime = 1;
+  gEl.banner.hidden = false;
+  gEl.banner.innerHTML =
+    `<b>Quarter 10 — market shift.</b> Two channels' true payoffs just moved. Your learned estimates `+
+    `are now <em>stale</em> — watch the prediction errors, and the dopamine, come roaring back.`+
+    `<button class="dismiss" aria-label="Dismiss">×</button>`;
+  const dz = gEl.banner.querySelector('.dismiss');
+  if(dz) dz.addEventListener('click', ()=>{ gEl.banner.hidden = true; });
+}
+
+function gAutoStep(){
+  if(g.done || g.busy) return;
+  let best = 0;
+  for(let i=1;i<CH.length;i++) if(g.V[i] > g.V[best]) best = i;
+  gPick(best);
+}
+function gToggleAuto(){
+  g.auto = !g.auto;
+  gEl.auto.setAttribute('aria-pressed', g.auto ? 'true':'false');
+  gEl.auto.innerHTML = g.auto ? '⏸ Pause auto-pilot' : '▶ Auto-pilot (exploit best)';
+  if(g.auto && !g.busy && !g.done) gAutoStep();
+}
+
+function gFinish(){
+  g.done = true; g.auto = false;
+  gEl.auto.setAttribute('aria-pressed','false');
+  gEl.auto.innerHTML = '▶ Auto-pilot (exploit best)';
+  g.cards.forEach(c=>c.disabled = true);
+
+  let oracle = 0, pitch = 0;
+  const flashiest = CH.reduce((bi,c,i,a)=> c.pitch > a[bi].pitch ? i : bi, 0);
+  for(let r=0;r<G_ROUNDS;r++){
+    const reg = r < G_SHIFT ? 0 : 1;
+    let bm = 0; for(let i=0;i<CH.length;i++) bm = Math.max(bm, CH[i].mu[reg]);
+    oracle += bm; pitch += CH[flashiest].mu[reg];
+  }
+  gEl.score.hidden = false;
+  gEl.score.innerHTML =
+    `<div class="score-row you"><span>You — learning by prediction error</span><b>${g.banked}</b></div>`+
+    `<div class="score-row muted2"><span>If you'd always chased the flashiest pitch</span><b>${Math.round(pitch)}</b></div>`+
+    `<div class="score-row muted2"><span>Perfect play — always the true best</span><b>${Math.round(oracle)}</b></div>`+
+    `<p class="score-note">The prediction error is what carried you from a neutral prior toward the true best. `+
+    `The <em>pitch</em> — the cue — would have misled you. The dopamine signal <em>taught</em>; it didn't just celebrate the wins.</p>`;
+  gEl.caption.innerHTML =
+    `<b>16 quarters done.</b> You banked <b>${g.banked}</b>. Reset and try a different strategy — `+
+    `e.g. switch on auto-pilot from the very start and watch a greedy "exploit" policy get stuck.`;
+}
+
+function gReset(){
+  g.alpha = parseFloat(gEl.alpha.value);
+  g.round = 0; g.banked = 0; g.regime = 0;
+  g.V = CH.map(()=>G_PRIOR); g.tries = CH.map(()=>0); g.hist = [];
+  g.busy = false; g.auto = false; g.done = false; g.started = true;
+  if(!g.cards.length) gBuildBoard();
+  gEl.auto.setAttribute('aria-pressed','false');
+  gEl.auto.innerHTML = '▶ Auto-pilot (exploit best)';
+  gEl.round.textContent = '0'; gEl.banked.textContent = '0';
+  gEl.revChan.textContent = '—'; gEl.revReturn.textContent = '—';
+  gEl.revDelta.textContent = '—'; gEl.revDelta.dataset.sign = 'zero';
+  gEl.deltaNow.textContent = '—';
+  gEl.banner.hidden = true; gEl.score.hidden = true;
+  g.cards.forEach(c=>{ c.disabled = false; c.classList.remove('sel','anticipate'); });
+  gRenderCards(); gDrawSpark();
+  gEl.caption.innerHTML =
+    `Back one channel each quarter. You begin with a <b>neutral prior</b> (V = 50) for all four. `+
+    `Each result updates that estimate by the <b>prediction error</b>: V ← V + α·(return − V).`;
+}
+
+function gDrawSpark(){
+  const { w, h } = sizeCanvas(gEl.spark, gsctx);
+  gsctx.clearRect(0,0,w,h);
+  const padX = 8, padY = 10;
+  const plotW = w - padX*2, plotH = h - padY*2;
+  const baseY = padY + plotH/2;
+  gsctx.strokeStyle = COL.rule; gsctx.lineWidth = 1; gsctx.setLineDash([4,4]);
+  gsctx.beginPath(); gsctx.moveTo(padX, baseY); gsctx.lineTo(w-padX, baseY); gsctx.stroke();
+  gsctx.setLineDash([]);
+  const n = Math.max(g.hist.length, G_ROUNDS);
+  const maxA = 40, halfH = plotH/2 - 2;
+  const bw = Math.max(3, Math.min(10, plotW/n*0.5));
+  g.hist.forEach((dd,i)=>{
+    const x = padX + plotW*((i+0.5)/n);
+    const dy = clamp(dd/maxA, -1, 1) * halfH;
+    if(Math.abs(dy) < 0.5) return;
+    gsctx.strokeStyle = dd >= 0 ? COL.signal : COL.loss;
+    gsctx.lineWidth = bw * COL.lw; gsctx.lineCap = 'round';
+    gsctx.beginPath(); gsctx.moveTo(x, baseY); gsctx.lineTo(x, baseY - dy); gsctx.stroke();
+  });
+}
+
+function setNavActive(v){
+  document.querySelectorAll('#viewNav button').forEach(b=>{
+    const on = b.dataset.view === v;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-pressed', on ? 'true':'false');
+  });
+}
+
+function showGame(){
+  introEl.wrap.classList.add('is-hidden');
+  introEl.skip.classList.add('is-hidden');
+  introEl.main.classList.add('is-hidden');
+  gmain.classList.remove('is-hidden');
+  document.getElementById('viewNav').classList.remove('is-hidden');
+  setNavActive('game');
+  if(!g.started){ gBuildBoard(); gReset(); }
+  requestAnimationFrame(()=>requestAnimationFrame(gDrawSpark));
+}
+
+/* game events */
+gEl.alpha.addEventListener('input', e=>{
+  g.alpha = parseFloat(e.target.value);
+  gEl.alphaVal.textContent = g.alpha.toFixed(2);
+});
+gEl.auto.addEventListener('click', gToggleAuto);
+gEl.reset.addEventListener('click', gReset);
+gEl.back.addEventListener('click', showInstrument);
+document.querySelectorAll('#viewNav button').forEach(b=>{
+  b.addEventListener('click', ()=> b.dataset.view === 'game' ? showGame() : showInstrument());
+});
+const toGameBtn = document.getElementById('toGame');
+if(toGameBtn) toGameBtn.addEventListener('click', showGame);
 
 /* ============================================================= *
  *  Init
