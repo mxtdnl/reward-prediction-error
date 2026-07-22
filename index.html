@@ -439,8 +439,11 @@ body.project .chan{box-shadow:none}
 .reveal .col{display:flex; flex-direction:column; gap:3px; justify-content:center; flex:1; min-width:0}
 .reveal .rc-delta{flex:1.4; border-left:1px solid var(--rule); padding-left:var(--s3)}
 .reveal .rk{font-family:var(--font-mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted)}
+.reveal .rk .lc{text-transform:none}
 .reveal .rv{font-family:var(--font-mono); font-weight:500; font-size:var(--fs-h2); line-height:1; color:var(--ink); font-variant-numeric:tabular-nums}
 .reveal .rchan{font-family:var(--font-display); font-size:var(--fs-h3); font-weight:600}
+.reveal .rsub{font-size:.66rem; line-height:1.35; color:var(--ink-muted); margin-top:3px; max-width:24ch}
+.reveal .rsub em{font-style:italic; color:var(--ink)}
 .reveal .rv.delta{font-size:var(--fs-h1)}
 .reveal .rv.delta[data-sign="pos"]{color:var(--signal)}
 .reveal .rv.delta[data-sign="neg"]{color:var(--loss)}
@@ -467,7 +470,15 @@ body.project .chan{box-shadow:none}
 .score-note{font-size:var(--fs-caption); color:var(--ink-muted); line-height:1.5; margin-top:2px}
 .score-note em{color:var(--ink); font-style:italic}
 
-.rail-chart-lbl span{color:var(--signal)}
+.rail-chart-lbl span{color:var(--signal); font-variant-numeric:tabular-nums}
+
+/* game explanatory microcopy */
+.counter-sub{font-size:var(--fs-caption); color:var(--ink-muted); line-height:1.35; margin-top:2px; max-width:30ch}
+.chart-note{margin-top:2px}
+.legend.science{border-top:1px solid var(--rule); margin:0 var(--s1); padding-top:var(--s2)}
+.legend .science-body{max-width:none; padding-top:var(--s3)}
+.legend .how-list .k{color:var(--ink)}
+.legend .how-list li span:last-child b{font-weight:600}
 
 @media (max-width:820px){
   .game{grid-template-columns:1fr; padding:var(--s3)}
@@ -687,12 +698,52 @@ body.project .chan{box-shadow:none}
     <div class="board" id="gBoard"></div>
 
     <div class="reveal" id="gReveal">
-      <div class="col rc-chan"><span class="rk">Backed</span><span class="rv rchan" id="gRevChan">—</span></div>
-      <div class="col"><span class="rk">Return</span><span class="rv" id="gRevReturn">—</span></div>
-      <div class="col rc-delta"><span class="rk">Prediction error&nbsp;δ</span><span class="rv delta" id="gRevDelta" data-sign="zero">—</span></div>
+      <div class="col rc-chan"><span class="rk">Backed</span><span class="rv rchan" id="gRevChan">—</span>
+        <span class="rsub">the channel you chose this quarter</span></div>
+      <div class="col"><span class="rk">Return</span><span class="rv" id="gRevReturn">—</span>
+        <span class="rsub">what it actually paid, 0–100 (the reward you <em>feel</em>)</span></div>
+      <div class="col rc-delta"><span class="rk">Prediction error&nbsp;<span class="lc">δ</span></span><span class="rv delta" id="gRevDelta" data-sign="zero">—</span>
+        <span class="rsub">return − your estimate = how much you just <em>learned</em></span></div>
     </div>
 
     <p class="caption" id="gCaption"></p>
+
+    <details class="science legend" id="gLegend" open>
+      <summary><span class="sci-open">How to read this screen</span> — every figure explained</summary>
+      <div class="science-body">
+        <div class="how" style="border-top:none; padding-top:0">
+          <ul class="how-list">
+            <li><span class="k">Channel cards</span><span>Your four bets. Each shows your
+              <b class="cueword">estimate&nbsp;V</b> (the blue bar, 0–100 — what you now expect that
+              channel to pay), its <b style="color:var(--amber)">pitch</b> (the amber bar — how good the
+              channel <em>claims</em> to be) and how many times you've <b>tried</b> it (e.g. 2×). The
+              pitch is a <em>cue</em>: like a slick sales deck, it doesn't reliably track real value.</span></li>
+            <li><span class="k">Return</span><span>When you back a channel it pays out a
+              <b>return</b> — a noisy draw on a 0–100 scale around that channel's hidden true value. This
+              is the money in hand, the reward you <em>feel</em>.</span></li>
+            <li><span class="k">Prediction error δ</span><span><b>δ = return − V</b>: the gap between
+              what you got and what you expected. <span style="color:var(--signal)">Positive</span> =
+              better than expected, <span class="lossword">negative</span> = worse. This gap — not the
+              return itself — is the <b>dopamine teaching signal</b>, and it's what nudges your estimate.</span></li>
+            <li><span class="k">δ per quarter</span><span>The little bar chart logs every quarter's δ.
+              Tall bars = big surprises (you're learning a lot); bars shrinking toward the dashed
+              baseline = no surprise left, so <em>nothing more to learn</em> — even while the returns
+              keep rolling in.</span></li>
+            <li><span class="k">Returns banked</span><span>Your cumulative return across every quarter
+              played — the running score you're trying to grow.</span></li>
+            <li><span class="k">Learning rate α</span><span>How far each δ moves your estimate:
+              <em>V ← V + α·δ</em>. Low α = <b>stubborn</b> (stable, slow to update); high α =
+              <b>jumpy</b> (fast, but chases every noisy result).</span></li>
+            <li><span class="k">Market shift · Q10</span><span>Halfway through, two channels' true
+              payoffs quietly move. Your hard-won estimates go <em>stale</em>, prediction errors surge
+              again, and you have to re-learn — just as real markets force you to.</span></li>
+            <li><span class="k">Auto-pilot</span><span>Hands the choice to a greedy rule that always
+              backs your current best estimate. Watch it exploit a lucky early winner and stop
+              exploring — a cautionary tale about never updating.</span></li>
+          </ul>
+        </div>
+      </div>
+    </details>
 
     <div class="scorecard" id="gScore" hidden></div>
 
@@ -717,11 +768,13 @@ body.project .chan{box-shadow:none}
     <div class="counter">
       <span class="lbl">Quarter</span>
       <span class="hero"><span id="gRound">0</span><span class="hero-sub">/16</span></span>
+      <span class="counter-sub">one decision per quarter · market shifts at&nbsp;10</span>
     </div>
 
     <div class="counter">
       <span class="lbl">Returns banked</span>
       <span class="hero" id="gBanked">0</span>
+      <span class="counter-sub">total paid out so far — the score</span>
     </div>
 
     <div class="rail-chart">
@@ -729,6 +782,10 @@ body.project .chan{box-shadow:none}
       <div class="canvas-wrap small">
         <canvas id="gSpark" role="img" aria-label="Bar trace of the reward-prediction error for each quarter played. Bars point up for positive errors, down for negative."></canvas>
       </div>
+      <p class="rail-note chart-note">Each bar is one quarter's δ.
+        <span style="color:var(--signal)">Up</span> = better than you expected,
+        <span class="lossword">down</span> = worse. Bars fading toward the baseline mean the
+        surprise — and the dopamine — is drying up.</p>
     </div>
 
     <div class="controls">
